@@ -1,0 +1,97 @@
+library(readxl)
+credito_scoring <- read_excel("Documentos/MBA/Working R/Arquivos_de_aula/credito_scoring.xlsx")
+View(credito_scoring)
+
+
+
+library(readxl)
+Banco <- read_excel("R/Banco.xlsx")
+View(Banco)
+
+
+dim(Banco)
+str(Banco)
+table(Banco$sexo)
+
+f_abs <- table(Banco$sexo)
+f_rel <- prop.table(table(Banco$sexo))
+f_abs
+
+tabela <- round(t(rbind(f_abs, f_rel)), digits = 2)
+tabela
+
+
+install.packages(c('summarytools', 'gmodels', 'dplyr', 'rfm',
+                   'lubridate', 'sqldf' ))
+
+library(summarytools)
+
+freq(Banco$sexo)
+
+freq(Banco$catemp, order = 'freq')
+
+freq(Banco$catemp, order = 'freq', round.digits = 6)
+
+freq(Banco$catemp, totals= FALSE, cumul=FALSE, headings=FALSE)
+
+with(Banco, by(catemp, sexo, freq))
+
+ctable(x=Banco$catemp, y=Banco$sexo, prop = 'r', round.digits = 2,
+       justify = 'center')
+
+
+
+descr(Banco$estudo, stats =c('mean','sd','max'))
+
+descr(Banco, stats =c('mean','sd','max','min'))
+
+
+
+
+
+table(Banco$sexo, Banco$catemp)
+
+library(gmodels)
+
+
+CrossTable(Banco$sexo, Banco$catemp, chisq= T)
+1/(sqrt(511))
+
+
+
+
+library(readxl)
+Compras <- read_excel("R/Compras.xlsx")
+View(Compras)
+library(dplyr)
+library(lubridate)
+library(rfm)
+
+
+agregar <- summarise(group_by(Compras, id),
+                     ticket_medio = mean(Valor_Compra),
+                     data_max = max(DT_Compra),
+                     freq = n()) 
+names(Compras)
+
+agregar
+
+agregar$data_atual <- as_date(Sys.Date())
+agregar$data_max<-as_date(agregar$data_max)
+
+agregar
+
+
+df <- rfm_table_order(agregar, id, data_max, ticket_medio, agregar$data_atual)
+df
+
+Banco$soma <-apply(Banco[,9:10],1,sum)
+Banco$soma <-Banco$cartao_credito+Banco$Emprestimos
+Banco$soma2 <-rowSums(Banco[,9:10])
+
+Banco
+
+mean(Banco$salário)
+mean(Banco$salarin)
+mean(Banco$salarin, na.rm=T)
+by(Banco$salário, Banco$sexo, mean)

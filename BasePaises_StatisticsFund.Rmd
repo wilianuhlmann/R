@@ -1,0 +1,891 @@
+---
+title: "Analise Descritiva de uma base "
+author: "AdelaideAlves"
+date: "Outubro de 2022"
+output: html_document
+---
+
+
+##  R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+# Base Paises - Recordes Femininos de Corrida
+# Fonte: Johnson e Wichern (2007, Applied Multivariate Statistical Analysis, sexta ed. Upper Saddle River, NJ: Pearson / Prentice Hall). http://www.stat.wisc.edu/~rich/JWMULT06dat/T1-9.dat.
+
+  
+### Primeiro Passo  
+  
+   Trazer o arquivo que contem a base que serah analizada para o **ambiente do R**
+   
+   Qual eh a extensao do arquivo que temos para estudo?: .csv .excel .sav etc...
+
+   alterar o caminho - Trabalhando com o RStudio Instalado
+   lembre da barra invertida /.
+
+#### Iniciando 
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+####  leitura de arquivo .csv 
+
+
+paises <- read.csv("C:/Users/AdelaideAlvesdeOlive/OneDrive - SD&W/1-Material/Exercitando/Base_Paises.csv", row.names=1, sep=";")
+
+
+```
+
+
+
+```{r }
+
+####  clicar em cima do arquivo para ver o conteudo ou usar o comando View
+
+View(paises)
+
+
+
+```
+
+```{r }
+
+####  Verificando o conteudo da base e os formatos das variáveis (numerica/categorica)
+
+str(paises)
+
+
+```
+
+
+```{r }
+attach(paises)
+
+summary(paises) # Show a summary of quantitative variable of table paises
+
+
+
+```
+
+```{r }
+
+summary(paises$p100ms) # Show a summary of the variable p100ms
+
+
+```
+
+```{r }
+
+#Calculating média  to p100ms variable
+
+mean(paises$p100ms) # média
+
+media100ms <- mean(paises$p100ms)
+
+media100ms
+
+
+```
+
+```{r }
+
+#Calculating median for a variable
+
+
+
+median(paises$p100ms) # mediana
+
+
+```
+
+```{r }
+
+#Calculating mean and median foa a variable
+
+mean(paises$pmaratm) # média
+
+
+median(paises$pmaratm) # mediana
+
+```
+
+
+```{r }
+
+#Calculating quantiles for a variable
+
+quantile(paises$p100ms )  # Quartis
+
+quantile(paises$p100ms,type=4)  # Quartis
+
+quantile(paises$p100ms, seq(0, 1, 0.25)) # Calculate p100ms quartiles, from table paises
+
+
+quantile(paises$p100ms,.65) # exato percentil
+
+
+```
+```{r }
+
+#Calculating quantiles for a variable
+
+
+quantile(paises$p100ms, seq(0, 1, 0.1)) # Calculate p100ms deciles, from table paises
+
+quantile(paises$p100ms,seq(.01,1,.01)) 
+
+
+```
+
+
+
+```{r }
+
+range(paises$p100ms)  # amplitude
+
+diff(range(paises$p100ms)) #diferença entre o maior e o menor valor
+
+min(paises$p100ms)  # valor mínimo de x
+
+max(paises$p100ms)  # valor máximo de x
+
+
+```
+
+
+```{r }
+
+# medidas de dispersão
+
+var(paises$p100ms) # para obter a variância
+
+sqrt(var(paises$p100ms))
+
+sd(paises$p100ms)  # para obter o desvio padrão
+
+```
+
+```{r }
+# Na avaliação de cada variável com os dados estão dispersos 
+
+mean(p100ms)
+mean(p200ms)
+mean(p800mm)
+mean(pmaratm)
+
+
+CV_p100ms<-sd(paises$p100ms)/mean(paises$p100ms)*100  # para obter o coeficiente de variação
+CV_p100ms
+
+CV_p200ms<-sd(paises$p200ms)/mean(paises$p200ms)*100  
+CV_p200ms
+
+CV_p800mm<-sd(paises$p800mm)/mean(paises$p800mm)*100  
+CV_p800mm
+
+CV_pmaratm<-sd(paises$pmaratm)/mean(paises$pmaratm)*100  
+CV_pmaratm
+
+
+```
+
+
+```{r }
+#Estatísticas descritivas
+summary(paises)
+```
+
+
+
+```{r }
+
+# Tipos de Gráficos para quando a variável é numérica
+
+hist(p100ms, main="Histogram of p100ms")
+
+boxplot(p100ms, main="Boxplot of p100ms")
+
+plot(p100ms,p200ms, main="Scatterplot of p100ms vs. p200ms")
+plot(p100ms,p800mm, main="Scatterplot of p100ms vs. p800mm")
+
+
+```
+
+```{r }
+#Show multiple charts
+#divide o espaço PLots em 1 linha e 2 colunas
+
+par (mfrow=c(1,2))
+hist(paises$p100ms)
+boxplot(paises$p100ms)
+par (mfrow=c(1,1))
+
+```
+
+```{r }
+#comando para gerar em 3 linhas e 3 colunas na área de plot
+par (mfrow=c(3,3))
+
+hist(paises$p100ms)
+hist(paises$p200ms)
+hist(paises$p400ms)
+hist(paises$p800mm)
+hist(paises$p1500mm)
+hist(paises$p3000mm)
+hist(paises$pmaratm)
+par (mfrow=c(1,1))
+
+
+```
+
+```{r }
+hist(paises$p100ms ,col=c("blue"), col.main="blue", prob=T , main="p100ms")
+
+
+hist(paises$p100ms,prob =T , main="p100ms")
+lines(density(paises$p100ms), col="red")
+
+qqnorm(paises$p100ms)
+qqline(paises$p100ms, col="blue")
+
+
+```
+
+```{r }
+
+# Quando os gráficos apresentarem dúvidas, podemos fazer testes estatísticos, como o Teste de Normalidade de Shapiro Wilk. Esse teste avalia a aderência dos resíduos à distribuição Normal. O p-valor se refere à hipótese de que os resíduos seguem de fato uma distribuição Normal, e essa hipótese é rejeitada, de modo geral, quando p é menor que 0.05. 
+
+
+shapiro.test(paises$p100ms)
+
+
+# Em nosso exemplo, o valor de p é 0.1875. Assim, aceita-se a hipótese de normalidade.
+ 
+
+```
+
+```{r }
+
+
+hist(paises$pmaratm,prob =T , main="pmaratm")
+lines(density(paises$pmaratm), col="red")
+
+qqnorm(paises$pmaratm)
+qqline(paises$pmaratm, col="blue")
+
+shapiro.test(paises$pmaratm)
+
+
+# Em nosso exemplo, o valor de p é praticamente zero (p-value < 2.621e-08). Assim, rejeitamos a hipótese de normalidade.
+# Em conformidade com a técnica que deverá seguir as alternativas podem ser:  avaliar e aplicar transformações nas variáveis independentes, excluir outliers, por exemplo
+
+```
+
+
+
+```{r }
+
+# utilizando outro pacote
+
+install.packages("e1071")
+library(e1071)
+
+
+# skewness:uma medida da falta de simetria de uma determinada distribuição de frequência
+# Se v>0, então a distribuição tem uma cauda direita (valores acima da média) mais pesada
+# Se v<0, então a distribuição tem uma cauda esquerda (valores abaixo da média) mais pesada
+# Se v=0, então a distribuição é aproximadamente simétrica (na terceira potência do desvio em relação à média).
+
+
+# a curtose é uma medida de forma que caracteriza o achatamento da curva
+# da função de distribuição de probabilidade 
+# Se o valor da curtose for = 0 (ou 3, pela segunda definição),
+# então tem o mesmo achatamento que a distribuição normal. Chama-se a estas funções de mesocúrticas
+# Se o valor é > 0 (ou > 3), então a distribuição em questão 
+# é mais alta (afunilada) e concentrada que a distribuição normal. Diz-se que esta função probabilidade é leptocúrtica, ou que a distribuição tem caudas pesadas (o significado é que é relativamente fácil obter valores que não se aproximam da média a vários múltiplos do desvio padrão)
+# Se o valor é < 0 (ou < 3), então a função de distribuição é
+# mais "achatada" que a distribuição normal. Chama-se-lhe platicúrtica
+
+
+```
+
+
+```{r }
+
+
+hist(paises$p100ms)
+kurtosis(paises$p100ms)
+skewness(paises$p100ms)
+mean(paises$p100ms)
+median(paises$p100ms)
+
+
+```
+
+
+```{r }
+
+hist(paises$p1500m)
+kurtosis(paises$p1500m)
+skewness(paises$p1500m)
+mean(paises$p1500m)
+median(paises$p1500m)
+
+```
+
+
+
+```{r }
+
+hist(paises$pmaratm)
+kurtosis(paises$pmaratm)
+skewness(paises$pmaratm)
+mean(paises$pmaratm)
+median(paises$pmaratm)
+
+
+```
+
+
+```{r }
+
+# Para avaliação de dados discrepantes/ruídos/anomalias/outliers
+ 
+```
+
+
+```{r }
+
+# alterando o range com relaçao a distância IQ
+par (mfrow=c(1,2))
+boxplot(paises$pmaratm, main="pmaratm")
+boxplot(paises$pmaratm ,col = "dark red" ,range = 3.0,  main="pmaratm - range=3.0")
+par (mfrow=c(1,1))
+
+ 
+```
+
+
+
+```{r }
+
+# obter os pontos do boxplot
+boxplot(paises$p100ms)
+boxplot.stats(paises$p100ms)
+
+boxplot.stats(paises$p200ms)$out
+boxplot.stats(paises$p400ms)$out
+boxplot.stats(paises$p800mm)$out
+boxplot.stats(paises$p1500mm)$out
+boxplot.stats(paises$p3000mm)$out
+boxplot.stats(paises$pmaratm)$out
+
+```
+
+
+```{r }
+
+# Gráficos entre duas variéveis quantittivas
+par (mfrow=c(2,3))
+plot (paises$p100ms,paises$p200ms)
+plot (paises$p100ms,paises$p400ms)
+plot (paises$p100ms,paises$p800mm)
+plot (paises$p100ms,paises$p1500mm)
+plot (paises$p100ms,paises$p3000mm)
+plot (paises$p100ms,paises$pmaratm)
+
+par (mfrow=c(2,3))
+plot (paises$p200ms,paises$p400ms)
+plot (paises$p200ms,paises$p800mm)
+plot (paises$p200ms,paises$p1500mm)
+plot (paises$p200ms,paises$p3000mm)
+plot (paises$p200ms,paises$pmaratm)
+
+par (mfrow=c(2,2))
+plot (paises$p400ms,paises$p800mm)
+plot (paises$p400ms,paises$p1500mm)
+plot (paises$p400ms,paises$p3000mm)
+plot (paises$p400ms,paises$pmaratm)
+
+par (mfrow=c(2,3))
+plot (paises$p800mm,paises$p1500mm)
+plot (paises$p800mm,paises$p3000mm)
+plot (paises$p800mm,paises$pmaratm)
+plot (paises$p1500mm,paises$p3000mm)
+plot (paises$p1500mm,paises$pmaratm)
+plot (paises$p3000mm,paises$pmaratm)
+
+par (mfrow=c(1,1))
+
+
+```
+
+```{r }
+
+# Calcular a correlação de Pearson
+corr_t<-cor.test(paises$p100ms,paises$p200ms,method="pearson",alternative="two.sided"); corr_t
+
+
+
+```
+
+
+```{r }
+
+# Calcular a correlação de Pearson
+corr_t<-cor.test(paises$p100ms,paises$pmaratm,method="pearson",alternative="two.sided"); corr_t
+
+
+
+```
+
+
+```{r }
+# Matriz de correlação entre todas as variáveis
+# somente variáveis numericas
+
+matcor = cor(paises);matcor
+
+
+
+```
+
+```{r }
+
+# matriz de correlações
+matcor <- cor(paises)
+print(matcor, digits = 2)
+
+
+```
+
+
+```{r }
+
+
+# install.packages("corrplot")
+library(corrplot)
+
+corrplot(matcor)
+corrplot(matcor, type="upper", method="number")
+
+
+
+```
+
+
+
+
+
+
+
+```{r }
+
+install.packages("Hmisc")
+library(Hmisc)
+
+mcorr = rcorr(as.matrix(paises));mcorr
+mcorr$r # correlação
+mcorr$P # p-valor
+mcorr$n # número de observações
+
+corrplot(mcorr$r,p.mat=mcorr$P, sig.level=0.05, method="number", type="upper")
+
+
+```
+
+```{r }
+
+install.packages("corrgram")
+library(corrgram)
+corrgram(matcor, type = "cor", lower.panel = panel.shade, upper.panel = panel.pie)
+
+
+```
+
+```{r}
+
+# install.packages("corrplot")
+library(corrplot)
+
+corrplot::corrplot(matcor,  type = "lower" , method="number", col = "black", order="hclust")
+
+```
+
+```{r }
+
+
+# install.packages("lattice")
+library(lattice)
+library(ggplot2)
+
+
+panel.cor <- function(x, y, digits=2, prefix ="", cex.cor,
+    ...)  {
+    usr <- par("usr")
+    on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- cor(x, y , use = "pairwise.complete.obs")
+    txt <- format(c(r, 0.123456789), digits = digits) [1]
+    txt <- paste(prefix, txt, sep = "")
+    if (missing(cex.cor))
+        cex <- 0.5/strwidth(txt)
+# abs(r) eh para que na saida as correlacoes ficam proporcionais
+    text(0.5, 0.5, txt, cex = cex * abs(r))
+}
+
+panel.hist <- function(x, ...) {
+    usr <- par("usr")
+    on.exit(par(usr))
+    par(usr = c(usr[1:2], 0, 1.5))
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks
+    nB <- length(breaks)
+    y <- h$counts
+    y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "red", border = "white", ...)
+}
+
+
+#pdf(file = "grafico.pdf")
+pairs(paises, lower.panel=panel.smooth, upper.panel=panel.cor, 
+      diag.panel=panel.hist)
+
+
+
+```
+
+
+```{r }
+
+
+########## usando pacotes ############
+
+
+#Using psych package to describe variables
+install.packages("psych")
+library(psych)
+
+describe(paises)
+
+```
+
+```{r }
+summary(paises)
+paises$Grupo_p100ms <- cut(paises$p100ms, breaks=c(0,11.3,13), right=F)
+paises$Grupo_pmaratm <- cut(paises$pmaratm, breaks=c(0,150,222), right=F)
+
+
+
+```
+
+```{r }
+
+
+table(paises$Grupo_p100ms)
+table(paises$Grupo_pmaratm)
+table(paises$Grupo_p100ms,paises$Grupo_pmaratm )
+
+
+```
+
+
+```{r }
+
+# 2-Way Frequency Table
+Tabela2dim <- xtabs(~Grupo_p100ms+Grupo_pmaratm, data=paises)
+ftable(Tabela2dim) # print table
+summary(Tabela2dim, DF) # chi-square test of indepedence 
+
+
+```
+
+```{r }
+describeBy(paises$pmaratm , paises$Grupo_p100ms ) # Descriptive summarization of Grupo de 100ms variable, by pmaratm variable
+
+# describe
+# A data.frame of the relevant statistics:
+# item name
+# item number
+# number of valid cases
+# mean
+# standard deviation
+# trimmed mean (with trim defaulting to .1)
+# median (standard or interpolated
+# mad: median absolute deviation (from the median)
+# minimum
+# maximum
+# skew
+# kurtosis
+# standard error
+
+```
+
+
+
+```{r }
+
+#Using gmodels package to produce frequency tables for categorical variables
+install.packages("gmodels")
+library(gmodels)
+
+CrossTable(paises$Grupo_p100ms,paises$Grupo_pmaratm )
+
+CrossTable(paises$Grupo_p100ms, paises$Grupo_pmaratm ,chisq =T)
+
+
+```
+
+
+```{r }
+
+########## Análise com Gráficos ############
+
+#Exploratory charts
+par(mar = rep(2, 4))
+hist(paises$p100ms, col=rainbow(12))
+boxplot(paises$p400ms, col = "red")
+boxplot(paises$pmaratm ~ paises$Grupo_p100ms, 
+        horizontal = T, frame = F, col = "lightgray", 
+        main = "Distribution")
+```
+
+```{r }
+#Use plotly package to draw exploratory charts
+install.packages("plotly")
+library(plotly)
+plot_ly(y=paises$p100ms, type = "box", boxpoints = "all", jitter = 0.3,pointpos = -1.8)
+
+```
+
+```{r }
+#Simple Scatterplots
+plot_ly(data = paises, x = ~p100ms, y = ~p200ms)
+
+
+```
+
+```{r }
+#Stylish scatterplot
+plot_ly(data = paises, x = ~p100ms, y = ~p200ms,
+        marker = list(size = 10,
+                      color = 'rgba(255, 182, 193, .9)',
+                      line = list(color = 'rgba(152, 0, 0, .8)',
+                                  width = 2))) %>%
+  layout(title = 'Styled Scatter',
+         yaxis = list(zeroline = FALSE),
+         xaxis = list(zeroline = FALSE))
+
+
+
+########## Trabalhando com a base ############
+
+plot_ly(y=paises$pmaratm, type = "box", boxpoints = "all", jitter = 0.3,pointpos = -1.8)
+
+```
+
+
+```{r }
+
+# Realizando filtros
+
+# selecionar as variáveis quantitativas
+
+paises_semout <- subset(paises, pmaratm <180, select=c(p100ms,p200ms,p400ms,p800mm, 
+                                                      p1500mm,p3000mm,pmaratm) )
+
+
+
+```
+
+
+```{r }
+par (mfrow=c(2,1))
+
+hist(paises$pmaratm, main = "pmaratm")
+hist(paises_semout$pmaratm)
+
+par (mfrow=c(1,2))
+
+```
+
+
+```{r }
+
+boxplot(paises$pmaratm, main="pmaratm")
+boxplot(paises_semout$pmaratm, main="pmaratm")
+
+
+hist(paises$p100ms, main = "p100ms")
+hist(paises_semout$p100ms, main = "p100ms")
+
+par (mfrow=c(2,1))
+hist(paises$p200ms)
+hist(paises_semout$p200ms)
+
+hist(paises$p400ms)
+hist(paises_semout$p400ms)
+
+hist(paises$p800mm)
+hist(paises_semout$p800mm)
+
+hist(paises$p1500mm)
+hist(paises_semout$p1500mm)
+
+
+
+```
+
+
+```{r }
+par (mfrow=c(2,1))
+hist(paises$p3000mm)
+hist(paises_semout$p3000mm)
+
+par (mfrow=c(2,1))
+boxplot(paises$p3000mm, main="p3000mm")
+boxplot(paises_semout$p3000mm, main="p3000mm")
+
+
+par (mfrow=c(1,1))
+
+
+```
+
+
+```{r }
+# matriz de correlações
+matcor1 <- cor(paises_semout)
+print(matcor1, digits = 2)
+
+```
+
+
+```{r }
+
+# fazendo transformações nas variáveis.
+
+# Padronização (var1-mean(var1))/desvio(var1)
+attach(paises_semout)
+View(paises_semout)
+padr_paises_semout <- scale(paises_semout)
+view(padr_paises_semout)
+
+summary(padr_paises_semout )
+
+
+```
+
+
+```{r }
+# fazendo transformações nas variáveis.
+# Normatização (0 - 1) (var1-min(var1)/(max(var1)-min(var1))
+
+View(paises_semout)
+norm_paises_semout <- paises_semout
+
+
+```
+
+
+```{r }
+attach(norm_paises_semout)
+summary(norm_paises_semout)
+norm_paises_semout$p100ms <- (p100ms-min(p100ms) )/(max(p100ms)-min(p100ms))
+summary(norm_paises_semout)
+
+```
+
+
+```{r }
+norm_paises_semout$p200ms <- (p200ms-min(p200ms) )/(max(p200ms)-min(p200ms))
+norm_paises_semout$p400ms <- (p400ms-min(p400ms) )/(max(p400ms)-min(p400ms))
+norm_paises_semout$p800mm <- (p800mm-min(p800mm) )/(max(p800mm)-min(p800mm))
+norm_paises_semout$p1500mm <- (p1500mm-min(p1500mm) )/(max(p1500mm)-min(p1500mm))
+norm_paises_semout$p3000mm <- (p3000mm-min(p3000mm) )/(max(p3000mm)-min(p3000mm)) 
+norm_paises_semout$pmaratm <- (pmaratm-min(pmaratm) )/(max(pmaratm)-min(pmaratm)) 
+summary(norm_paises_semout )
+
+```
+
+
+```{r }
+
+par (mfrow=c(1,2))
+
+hist(paises$p100ms)
+hist(paises_semout$p100ms)
+hist(norm_paises_semout$p100ms)
+
+```
+
+
+```{r }
+
+par (mfrow=c(3,3))
+hist(norm_paises_semout$p100ms)
+hist(norm_paises_semout$p200ms)
+hist(norm_paises_semout$p400ms)
+hist(norm_paises_semout$p800mm)
+hist(norm_paises_semout$p1500mm)
+hist(norm_paises_semout$p3000mm)
+hist(norm_paises_semout$pmaratm)
+
+par (mfrow=c(1,1))
+
+```
+
+
+```{r }
+attach(paises)
+paises$log_pmaratm<-log(paises$pmaratm)
+paises$raizq_pmaratm<- sqrt(paises$pmaratm)
+paises$inversa_pmaratm<- 1/(paises$pmaratm)
+par (mfrow=c(1,4))
+hist(paises$pmaratm)
+hist(paises$log_pmaratm)
+hist(paises$raizq_pmaratm)
+hist(paises$inversa_pmaratm)
+```
+
+
+```{r }
+
+
+
+# outros filtros
+# Realizando filtros
+paises_first_3lines <- paises[1:3, ] # Filter first 3 rows and all columns of table paises
+
+# Select rows with p100ms > 12 and p200ms > 24
+paises_filter_01 <- subset(paises, p100ms > 12 & p200ms > 24) 
+paises_filter_01 # Show object paises_filter_01
+
+# Select rows with p100ms > 12 or p200ms > 24
+paises_filter_02 <- subset(paises, p100ms > 12 | p200ms > 24) 
+paises_filter_02  
+
+# Select rows with p100ms=8
+paises_filter_03 <- subset(paises, p100ms == 8) 
+paises_filter_03  
+
+# Select rows with p100ms=8, retaining just columns p100ms and p1500mm
+paises_filter_04 <- subset(paises, p100ms == 8, select = c(p800mm, p1500mm)) 
+paises_filter_04 
+
+# Select rows with p100ms=8, keeping all variables, except p100ms and p1500mm
+paises_filter_05 <- subset(paises, p100ms== 8, select = -c(p800mm, p1500mm)) 
+paises_filter_05  
+
+# Select a sample of 10 rows of table paises
+amostra01_paises <- paises[sample(1:nrow(paises), 10, replace = FALSE), ] 
+amostra021_paises # Show object amostra_paises
+
+
+
+
+```
